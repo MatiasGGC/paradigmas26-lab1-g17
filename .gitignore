@@ -1,3 +1,48 @@
+# scala-cli, bloop, metals
+.bsp/
+.bloop/
+.metals/
+.scala-build/
+project/metals.sbt
+
+# vs code
+.vscode/
+
+# scala 3
+.tasty
+
+# sbt
+project/project/
+project/target/
+target/
+
+# eclipse
+build/
+.classpath
+.project
+.settings
+.worksheet
+bin/
+.cache
+
+# intellij idea
+*.log
+*.iml
+*.ipr
+*.iws
+.idea
+
+# mac
+.DS_Store
+
+# other?
+.history
+.scala_dependencies
+.cache-main
+
+# general
+*.class
+
 # --- Entornos virtuales ---
 .venv/
 venv/
@@ -33,13 +78,12 @@ htmlcov/
 .ipynb_checkpoints/
 
 # --- Configs locales / IDE ---
-.vscode/
 .idea/
 .spyproject/
 *.code-workspace
 
-# --- Archivos temporales / sistema ---
-.DS_Store
+# --- Archivos temporales / sistema (including macOS metadata) ---
+._*                        
 Thumbs.db
 *.swp
 *.swo
@@ -60,4 +104,3 @@ logs/
 *.secret
 secrets.toml
 
-# --- Datos locales (opcional; descomenta si aplica) ---
