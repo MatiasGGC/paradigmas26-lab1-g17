@@ -14,7 +14,7 @@ object PostFilter{ //usamos esto para agrupar funciones relacionadas sin necesid
     val esValido: Post => Boolean = 
         post => tieneContenidoReal(post._2) && tieneContenidoReal(post._3)
 
-    val filtrarPost: List[Post] => List[Post] =
-        posts => posts.filter(esValido)
+    val filtrarPost: Option[List[Post]] => Option[List[Post]] =
+        postsOpt => postsOpt.map(posts => posts.filter(esValido))
 
 }
