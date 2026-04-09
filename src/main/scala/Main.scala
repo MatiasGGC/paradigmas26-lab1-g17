@@ -1,21 +1,64 @@
 object Main {
-  def main(args: Array[String]): Unit = {
-    val header = s"Reddit Post Parser\n${"=" * 40}"
-    println(header)
 
-    val subscriptions: List[FileIO.Subscription] = FileIO.readSubscriptions("subscriptions.json")
+  type Subscription = (String, String) 
+  type Post = (Option[String], Option[String], Option[String], Option[String], Option[Int]) 
+  
+  val defaultSubscriptionsPath = "subscriptions.json"
 
-    val allPosts: List[(String, String)] = subscriptions.map { case (name, url) =>
-      println(s"Fetching posts from: $url")
-      val posts = FileIO.downloadFeed(url)
-      (url, posts)
+  def info(msg: String): Unit =
+    println(s"[info] $msg")
+
+  def error(msg: String): Unit =
+    Console.err.println(s"[error] $msg")
+
+  def loadPosts(subscription: Subscription): Option[(String, List[Post])] = {
+    val (name, url) = subscription
+
+    FileIO.downloadFeed(url) match {
+      case None =>
+        error(s"Could not download feed for '$name' ($url).")
+        None
+
+      case Some(rawJson) =>
+        Formatters.formatSubscription(url, Some(rawJson)) match {
+          case None =>
+            error(s"Could not parse feed for '$name' ($url).")
+            None
+
+          case Some(posts) =>
+            val filteredPosts = PostFilter.filtrarPost(Some(posts)).getOrElse(Nil)
+
+            if (filteredPosts.isEmpty) {
+              info(s"Subscription '$name' produced no valid posts after filtering.")
+            }
+
+            Some(name -> filteredPosts)
+        }
     }
-    
-    // modificar case class
-    val output = allPosts
-      .map { case (url, posts) => Formatters.formatSubscription(url, posts) }
-      .mkString("\n")
+  }
 
-    println(output)
+  def main(args: Array[String]): Unit = {
+    val subscriptionsPath = args.headOption.getOrElse(defaultSubscriptionsPath)
+
+    println("Reddit Post Parser")
+    println("=" * 40)
+
+    FileIO.readSubscriptions(subscriptionsPath) match {
+      case None =>
+        error(s"Could not read '$subscriptionsPath', or the file contains no valid subscriptions.")
+
+      case Some(Nil) =>
+        error(s"'$subscriptionsPath' is empty or every entry is invalid.")
+
+      case Some(subscriptions) =>
+        val allPostsBySubreddit: Map[String, List[Post]] =
+          subscriptions.flatMap(loadPosts).toMap
+
+        if (allPostsBySubreddit.isEmpty) {
+          error("No feeds could be downloaded or parsed successfully.")
+        } else {
+          Informe.printReport(subscriptions, allPostsBySubreddit)
+        }
+    }
   }
 }
