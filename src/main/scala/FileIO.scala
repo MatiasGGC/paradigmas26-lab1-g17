@@ -32,12 +32,9 @@ object FileIO {
   
   // Pure function to download JSON feed from a URL
   def downloadFeed(url: String): Option[String] = {
-    try {
-      val source = Source.fromURL(url)
-        Some(source.mkString)
-    } catch {
-      case e: Exception => None
-    }
+    Using(Source.fromURL(url)) { source =>
+      source.mkString
+    }.toOption
   }
 }
 
