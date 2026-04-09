@@ -28,7 +28,7 @@ object Ejercicio5 {
 
         postsOpt.map { posts =>
 
-            val texts = posts.map{case (_,title,selftext,_) =>
+            val texts = posts.map{case (_,title,selftext,_,_) =>
                 title + " " + selftext}
 
             val words = texts.flatMap(_.split("\\W+"))

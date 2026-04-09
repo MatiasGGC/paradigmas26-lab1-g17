@@ -1,6 +1,7 @@
 object Main {
   def main(args: Array[String]): Unit = {
     val header = s"Reddit Post Parser\n${"=" * 40}"
+    println(header)
 
     val subscriptions: List[FileIO.Subscription] = FileIO.readSubscriptions("subscriptions.json")
 

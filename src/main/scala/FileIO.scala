@@ -15,21 +15,23 @@ object FileIO {
     } yield (name, url)
 
 
-  // revisar caso donde el JSON es un array vacio
   def readSubscriptions(path: String): Option[List[Subscription]] = {
     try {
       Using.resource(Source.fromFile(path)) { source =>
         val json = parse(source.mkString)
         // extractOpt[List[JValue]] da None si el root no es un array
         json.extractOpt[List[JValue]].map { items =>
-          items.flatMap(readSubscription)  // filtra suscripciones invalidas
+          items.flatMap(readSubscription)  // filtra suscripciones inválidas
         }
       }
     } catch {
       case e: Exception => None
     }
   }
+  // Si el JSON es una lista vacía => Some(Nil)
+  // Si todas las suscripciones son inválidas, pero la lectura fue exitosa => Some(Nil)
   
+
   // Pure function to download JSON feed from a URL
   def downloadFeed(url: String): Option[String] = {
     Using(Source.fromURL(url)) { source =>
