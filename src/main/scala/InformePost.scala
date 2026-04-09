@@ -13,7 +13,7 @@ object Informe {
     val (name, url) = subscription
 
     val totalScore = PostScore.sumarScores(Some(posts)).getOrElse(0)
-    val topWords   = Ejercicio5.wordFrequencies(posts).take(topN)
+    val topWords = Ejercicio5.wordFrequencies(Some(posts)).getOrElse(List()).take(topN)
     val top5Posts  = posts.take(5)
 
     val seccionScore =
