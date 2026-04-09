@@ -1,10 +1,24 @@
 import org.json4s._
 import org.json4s.jackson.JsonMethods._
+import java.time.format.DateTimeFormatter
+import java.time.{Instant, ZoneId, ZonedDateTime}
+
 
 object Formatters {
   type Post = (Option[String], Option[String], Option[String], Option[String], Option[Int], Option[String]) 
 
   implicit val formats: Formats = DefaultFormats
+
+  private def formatDate(seconds: Option[Long]): Option[String] = seconds match {
+    case Some(seconds) => {
+      val millis = seconds * 1000
+      val instant = Instant.ofEpochMilli(millis)
+      val created_utc = ZonedDateTime.ofInstant(instant, ZoneId.of("UTC"))
+      val formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss")
+      Some(created_utc.format(formatter))
+    }
+    case None => None
+  }
 
   def formatSubscription(url: String, posts: Option[String]): Option[List[Post]] = posts match {
     case Some(posts) =>
@@ -21,9 +35,9 @@ object Formatters {
                 (data \ "subreddit").extractOpt[String],
                 (data \ "title").extractOpt[String],
                 (data \ "selftext").extractOpt[String],
-                (data \ "created_utc").extractOpt[Double].map(_.toLong.toString), 
+                formatDate((data \ "created_utc").extractOpt[Double].map(_.toLong)), 
                 (data \ "score").extractOpt[Int], 
-                (data \ "permalink".extractOpt[String]
+                (data \ "permalink").extractOpt[String]
               )
               Some(post)
             } catch {
