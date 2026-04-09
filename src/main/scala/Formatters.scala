@@ -2,7 +2,7 @@ import org.json4s._
 import org.json4s.jackson.JsonMethods._
 
 object Formatters {
-  type Post = (Option[String], Option[String], Option[String], Option[String], Option[Int]) 
+  type Post = (Option[String], Option[String], Option[String], Option[String], Option[Int], Option[String]) 
 
   implicit val formats: Formats = DefaultFormats
 
@@ -22,7 +22,8 @@ object Formatters {
                 (data \ "title").extractOpt[String],
                 (data \ "selftext").extractOpt[String],
                 (data \ "created_utc").extractOpt[Double].map(_.toLong.toString), 
-                (data \ "score").extractOpt[Int]
+                (data \ "score").extractOpt[Int], 
+                (data \ "permalink".extractOpt[String]
               )
               Some(post)
             } catch {
