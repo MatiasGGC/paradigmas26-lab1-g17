@@ -41,7 +41,8 @@ object Informe {
              .map { case (post, idx) =>
                val title = post._2.getOrElse("Sin título")
                val date  = post._4.getOrElse("Fecha desconocida")
-               s"${idx + 1}. **$title** — $date"
+               val urlPost = post._6.getOrElse("Url desconocido")
+               s"${idx + 1}. **$title** ---  $date  --- $urlPost ---"
              }
              .mkString("\n") + "\n"
         )
