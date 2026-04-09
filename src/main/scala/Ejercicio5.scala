@@ -29,7 +29,7 @@ object Ejercicio5 {
         postsOpt.map { posts =>
 
             val texts = posts.flatMap {
-                case (_, Some(title), Some(selftext), _, _) =>
+                case (_, Some(title), Some(selftext), _, _,_) =>
                     Some(title + " " + selftext)
                 case _ => None
 }
