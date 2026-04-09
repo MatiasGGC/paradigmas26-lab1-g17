@@ -23,7 +23,7 @@ object Formatters {
                 (data \ "selftext").extractOpt[String],
                 (data \ "created_utc").extractOpt[Double].map(_.toLong.toString), 
                 (data \ "score").extractOpt[Int], 
-                (data \ "permalink".extractOpt[String]
+                (data \ "permalink").extractOpt[String]
               )
               Some(post)
             } catch {
