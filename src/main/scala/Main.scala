@@ -1,7 +1,7 @@
 object Main {
 
   type Subscription = (String, String) 
-  type Post = (Option[String], Option[String], Option[String], Option[String], Option[Int]) 
+  type Post = (Option[String], Option[String], Option[String], Option[String], Option[Int], Option[String]) 
   
   val defaultSubscriptionsPath = "subscriptions.json"
 
