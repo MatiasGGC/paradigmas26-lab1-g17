@@ -20,6 +20,12 @@ object Formatters {
     case None => None
   }
 
+  private def toRedditUrl(permalink: Option[String]): Option[String] =
+    permalink.map { p =>
+      if (p.startsWith("http")) p
+      else s"https://www.reddit.com$p"
+  }
+
   def formatSubscription(url: String, posts: Option[String]): Option[List[Post]] = posts match {
     case Some(posts) =>
       try {
@@ -37,7 +43,7 @@ object Formatters {
                 (data \ "selftext").extractOpt[String],
                 formatDate((data \ "created_utc").extractOpt[Double].map(_.toLong)), 
                 (data \ "score").extractOpt[Int], 
-                (data \ "permalink").extractOpt[String]
+                toRedditUrl((data \ "permalink").extractOpt[String])
               )
               Some(post)
             } catch {
