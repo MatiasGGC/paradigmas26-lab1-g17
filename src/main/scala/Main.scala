@@ -9,7 +9,7 @@ object Main {
     println(s"[info] $msg")
 
   def error(msg: String): Unit =
-    Console.err.println(s"[error] $msg")
+    Console.err.println(s"[error] $msg")     // lo mismo que println() pero para errores
 
   def loadPosts(subscription: Subscription): Option[(String, List[Post])] = {
     val (name, url) = subscription
